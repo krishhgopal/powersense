@@ -1,0 +1,144 @@
+# PowerBench Benchmark Specification
+# ===================================
+# Synthetic benchmark for power-constrained manufacturing test environments.
+# Parameters calibrated to:
+#   - SPECpower_ssj2008 published results (power profiles)
+#   - NEC/NFPA 70 electrical distribution standards (topology)
+#   - Barroso et al. 2019 (power variability ranges)
+
+facility:
+  name: "PowerBench-5K"
+  total_capacity_kw: 4500
+  hierarchy:
+    - level: 0
+      name: "Source"
+      count: 1
+      capacity_kw: 4500
+    - level: 1
+      name: "Transformer"
+      count: 8
+      capacity_kw: 562.5       # 4500 / 8
+    - level: 2
+      name: "Distribution Panel"
+      count: 48                # 6 per transformer
+      capacity_kw: 93.75      # 562.5 / 6
+    - level: 3
+      name: "Branch Circuit"
+      count: 384               # 8 per panel
+      capacity_kw: 11.72      # 93.75 / 8
+    - level: 4
+      name: "Test Slot"
+      count: 5000              # ~13 per circuit
+      capacity_kw: null        # determined by UUT
+
+# 12 product types with distinct power profiles
+# Power values calibrated to SPECpower_ssj2008 enterprise server data
+products:
+  - id: 1
+    name: "Type-A"
+    nameplate_kw: 1.05
+    avg_power_kw: 0.62
+    peak_to_avg: 1.69
+    phases: 4
+    test_duration_hours: 4.5
+    cv: 0.08
+  - id: 2
+    name: "Type-B"
+    nameplate_kw: 0.85
+    avg_power_kw: 0.51
+    peak_to_avg: 1.67
+    phases: 3
+    test_duration_hours: 3.0
+    cv: 0.06
+  - id: 3
+    name: "Type-C"
+    nameplate_kw: 1.40
+    avg_power_kw: 0.88
+    peak_to_avg: 1.59
+    phases: 5
+    test_duration_hours: 6.0
+    cv: 0.10
+  - id: 4
+    name: "Type-D"
+    nameplate_kw: 0.72
+    avg_power_kw: 0.50
+    peak_to_avg: 1.44
+    phases: 3
+    test_duration_hours: 2.5
+    cv: 0.05
+  - id: 5
+    name: "Type-E"
+    nameplate_kw: 1.80
+    avg_power_kw: 1.12
+    peak_to_avg: 1.61
+    phases: 6
+    test_duration_hours: 7.5
+    cv: 0.12
+  - id: 6
+    name: "Type-F"
+    nameplate_kw: 0.95
+    avg_power_kw: 0.58
+    peak_to_avg: 1.64
+    phases: 4
+    test_duration_hours: 4.0
+    cv: 0.07
+  - id: 7
+    name: "Type-G"
+    nameplate_kw: 1.20
+    avg_power_kw: 0.75
+    peak_to_avg: 1.60
+    phases: 5
+    test_duration_hours: 5.5
+    cv: 0.09
+  - id: 8
+    name: "Type-H"
+    nameplate_kw: 0.65
+    avg_power_kw: 0.46
+    peak_to_avg: 1.41
+    phases: 3
+    test_duration_hours: 2.0
+    cv: 0.05
+  - id: 9
+    name: "Type-I"
+    nameplate_kw: 1.55
+    avg_power_kw: 0.98
+    peak_to_avg: 1.58
+    phases: 5
+    test_duration_hours: 6.5
+    cv: 0.11
+  - id: 10
+    name: "Type-J"
+    nameplate_kw: 2.10
+    avg_power_kw: 1.20
+    peak_to_avg: 1.75
+    phases: 6
+    test_duration_hours: 8.0
+    cv: 0.15
+  - id: 11
+    name: "Type-K"
+    nameplate_kw: 0.80
+    avg_power_kw: 0.53
+    peak_to_avg: 1.51
+    phases: 4
+    test_duration_hours: 3.5
+    cv: 0.06
+  - id: 12
+    name: "Type-L"
+    nameplate_kw: 1.10
+    avg_power_kw: 0.70
+    peak_to_avg: 1.57
+    phases: 4
+    test_duration_hours: 5.0
+    cv: 0.08
+
+# Production mix (probability weights for product selection)
+production_mix:
+  weights: [0.12, 0.10, 0.08, 0.11, 0.05, 0.09, 0.07, 0.12, 0.06, 0.04, 0.08, 0.08]
+  daily_rate_range: [800, 1200]
+
+simulation:
+  horizon_days: 30
+  decision_epoch_minutes: 5
+  epochs_per_day: 288
+  total_epochs: 8640
+  random_seed: 2026
